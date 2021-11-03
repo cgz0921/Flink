@@ -1,0 +1,38 @@
+import org.apache.flink.streaming.api.scala._
+
+object Source_TextFile {
+  def main(args: Array[String]): Unit = {
+    //  创建执行环境(流)
+    val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
+
+    //  从文件中读取数据
+    val textData: DataStream[String] = env.readTextFile("src/main/resources/sensor.txt", "UTF-8")
+
+    //  对数据进行逻辑处理
+//    textData.map(data=>{
+//      val dataArray: Array[String] = data.split(",")
+//      if (dataArray(2).toDouble > 30){
+//        println("high temperature:高温")
+//      }else println("low temperature:低温")
+//    })
+
+
+    val value: DataStream[SensorReading] = textData
+      .map(data => {
+        val dataArray: Array[String] = data.split(",")
+        SensorReading(dataArray(0).trim, dataArray(1).trim.toLong, dataArray(2).trim.toDouble)
+      }).keyBy("id")
+      .filter(_.temperature > 30)
+
+    value.print()
+
+    //  运行程序
+    env.execute()
+  }
+}
+
+//case class SensorReading(
+//                          id: String,
+//                          timestamp: Long,
+//                          temperature: Double
+//                        )
