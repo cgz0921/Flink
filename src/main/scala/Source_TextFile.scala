@@ -30,7 +30,7 @@ object Source_TextFile {
     env.execute()
   }
 }
-
+// 这里可以不用再重新定义样例类SensorReading，因为这个程序和Source_Collection程序在同一个包下,所以可以访问别的程序下面的类和属性
 //case class SensorReading(
 //                          id: String,
 //                          timestamp: Long,
