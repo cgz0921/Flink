@@ -36,6 +36,16 @@
             <artifactId>flink-connector-kafka-0.11_2.11</artifactId>
             <version>1.10.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <!--
+            为了将flink处理后的结果写入mysql数据库,需要添加mysql的依赖
+            此处需要保证版本和mysql的版本保持一致，否者会出现如下错误信息：Unable to load authentication plugin 'caching_sha2_password'
+        -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
+        </dependency>
     </dependencies>
 
     <build>
