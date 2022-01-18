@@ -52,6 +52,12 @@
             <artifactId>flink-table-planner_2.11</artifactId>
             <version>1.10.0</version>
         </dependency>
+        <!-- 使用新的读取csv文件的api所必须的 -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-csv</artifactId>
+            <version>1.10.0</version>
+        </dependency>
     </dependencies>
 
     <build>
