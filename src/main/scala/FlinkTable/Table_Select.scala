@@ -36,6 +36,8 @@ object Table_Select {
     //  4.2 使用SQL方式读取
     //  4.2.1 双引号方式SQL--适合简单、短SQL语句查询
     val res_table02: Table = tableEnv.sqlQuery("select * from tableOfSelect where id='sensor_1'")
+    //  4.2.1-1 使用SQL聚合查询
+    val res_table_agg02: Table = tableEnv.sqlQuery("select id,count(*) as cn from tableOfSelect group by id")
     //  4.2.2 三引号方式SQL--适合复杂、长SQL语句查询
     val res_table03: Table = tableEnv.sqlQuery(
       """
@@ -47,20 +49,25 @@ object Table_Select {
         |id='sensor_1'
         |""".stripMargin)
 
-
-
-
-
     //  5 读取表结果转换为DataStream
     val res_ds01: DataStream[(String, Double)] = res_table01.toAppendStream[(String, Double)]
     val res_ds02: DataStream[(String, Long, Double)] = res_table02.toAppendStream[(String, Long, Double)]
     val res_ds03: DataStream[(String, Long, Double)] = res_table02.toAppendStream[(String, Long, Double)]
+    //  下面需要注意：
+    //  因为咱们执行的是流计算，所以进行聚合操作的时候，相同key的聚合结果是在不停的发生变化的，
+    //  所以此时我们需要使用toRetractStream方法，如果继续使用toAppendStream方法是会报错的
+    //  toRetractStream方法返回的类型的第一个类型是Boolean、第二个就是我们熟悉的结果类型（元祖）
+    //  我们只需要看Boolean=true的结果即可，true代表后面的结果已经更新了
+    val res_ds_agg01: DataStream[(Boolean, (String, Long))] = res_table_agg02.toRetractStream[(String, Long)]
+    val res_ds_agg02: DataStream[(Boolean, (String, Long))] = res_table_agg02.toRetractStream[(String, Long)]
 
 
     //  6 DataStream类型结果打印输出
     res_ds01.print()
     res_ds02.print()
     res_ds03.print()
+    res_ds_agg01.print()
+    res_ds_agg02.print()
     //  7 流程序执行
     env.execute()
   }
