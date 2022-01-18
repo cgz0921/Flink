@@ -46,6 +46,12 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.11</version>
         </dependency>
+        <!-- 使用FlinkSql的Table API必须要引入的依赖,当然了，版本号可以使用1.10.0-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-planner_2.11</artifactId>
+            <version>1.10.0</version>
+        </dependency>
     </dependencies>
 
     <build>
